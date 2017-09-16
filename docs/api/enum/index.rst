@@ -16,8 +16,10 @@ can be found here:
    WdHeaderFooterIndex
    WdLineSpacing
    WdOrientation
+   WdRowAlignment
    WdSectionStart
    WdStyleType
-   WdRowAlignment
+   WdTabAlignment
+   WdTabLeader
    WdTableDirection
    WdUnderline
