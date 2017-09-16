@@ -9,7 +9,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 from collections import Sequence
 
 from .enum.header import WD_HEADER_FOOTER
-from .header import Header
+from .header import Header, Footer
 from .shared import ElementProxy, lazyproperty
 
 
@@ -94,6 +94,16 @@ class Section(ElementProxy):
         using the returned object.
         """
         return Header(self._sectPr, self, WD_HEADER_FOOTER.PRIMARY)
+
+    @lazyproperty
+    def footer(self):
+        """
+        Return the |Footer| object representing the default footer for this
+        section. A |Footer| object is always returned, whether such a footer
+        is present or not. The footer itself is added, updated, or removed
+        using the returned object.
+        """
+        return Footer(self._sectPr, self, WD_HEADER_FOOTER.PRIMARY)
 
     @property
     def header_distance(self):

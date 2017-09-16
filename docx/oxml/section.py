@@ -63,6 +63,7 @@ class CT_SectPr(BaseOxmlElement):
         'w:rtlGutter', 'w:docGrid', 'w:printerSettings', 'w:sectPrChange',
     )
     headerReference = ZeroOrMore('w:headerReference', successors=_tag_seq[1:])
+    footerReference = ZeroOrMore('w:footerReference', successors=_tag_seq[1:])
     type = ZeroOrOne('w:type', successors=_tag_seq[5:])
     pgSz = ZeroOrOne('w:pgSz', successors=_tag_seq[6:])
     pgMar = ZeroOrOne('w:pgMar', successors=_tag_seq[7:])
@@ -119,6 +120,17 @@ class CT_SectPr(BaseOxmlElement):
         """
         type_str = WD_HEADER_FOOTER.to_xml(type_member)
         matches = self.xpath('w:headerReference[@w:type="%s"]' % type_str)
+        if matches:
+            return matches[0]
+        return None
+
+    def get_footerReference_of_type(self, type_member):
+        """
+        Return the `w:footerReference` child having type attribute value
+        associated with *type_member*, or |None| if not present.
+        """
+        type_str = WD_HEADER_FOOTER.to_xml(type_member)
+        matches = self.xpath('w:footerReference[@w:type="%s"]' % type_str)
         if matches:
             return matches[0]
         return None

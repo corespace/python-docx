@@ -32,26 +32,24 @@ class Describe_BaseHeaderFooter(object):
         assert body == expected_value
 
     def it_provides_access_to_the_related_hdrftr_body(self, hdrftr_fixture):
-        document_part, get_related_parts, header_part_ = hdrftr_fixture
+        document_part, header_part_ = hdrftr_fixture
         rId = 'rId1'
         body = document_part.related_hdrftr_body(rId)
-        get_related_parts.assert_called_once_with(rId)
         assert body == header_part_.body
 
     # fixtures -------------------------------------------------------
 
     @pytest.fixture
-    def hdrftr_fixture(self, request, header_part_, body_):
+    def hdrftr_fixture(self, header_part_, body_, related_parts_prop_):
         header_part_.body = body_
         document_part = DocumentPart(None, None, None, None)
+        related_parts_ = related_parts_prop_.return_value
+        related_parts_.__getitem__.return_value.body = body_
+        return document_part, header_part_
 
-        get_related_part = method_mock(
-            request,
-            DocumentPart,
-            'get_related_part')
-        get_related_part.return_value = header_part_
-
-        return document_part, get_related_part, header_part_
+    @pytest.fixture
+    def related_parts_prop_(self, request):
+        return property_mock(request, DocumentPart, 'related_parts')
 
     @pytest.fixture(params=[
         ('w:sectPr',                                             None),

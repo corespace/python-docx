@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 """
-|HeaderPart| and closely related objects
+|HeaderPart|, |FooterPart| and closely related objects
 """
 
 from __future__ import (
@@ -18,7 +18,15 @@ class HeaderPart(XmlPart):
         """
         A |HeaderFooterBody| proxy object for the `w:hdr` element in this part,
         """
-        # TODO write CT_HeaderFooter
-        # element = CT_HeaderFooter(self.element)
-        # how to access parent here? is it necessary?
+        # TODO: how to access parent here? is it necessary? self?
+        return HeaderFooterBody(self.element, None)
+
+
+class FooterPart(XmlPart):
+    @property
+    def body(self):
+        """
+        A |HeaderFooterBody| proxy object for the `w:ftr` element in this part,
+        """
+        # TODO: how to access parent here? is it necessary? self?
         return HeaderFooterBody(self.element, None)

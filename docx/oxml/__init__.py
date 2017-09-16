@@ -90,6 +90,7 @@ from .section import (
     CT_HdrFtrRef, CT_PageMar, CT_PageSz, CT_SectPr, CT_SectType
 )
 register_element_cls('w:headerReference', CT_HdrFtrRef)
+register_element_cls('w:footerReference', CT_HdrFtrRef)
 register_element_cls('w:pgMar',           CT_PageMar)
 register_element_cls('w:pgSz',            CT_PageSz)
 register_element_cls('w:sectPr',          CT_SectPr)
@@ -199,3 +200,7 @@ from .text.run import CT_Br, CT_R, CT_Text
 register_element_cls('w:br', CT_Br)
 register_element_cls('w:r',  CT_R)
 register_element_cls('w:t',  CT_Text)
+
+from .header import CT_HeaderFooter
+register_element_cls('w:hdr', CT_HeaderFooter)
+register_element_cls('w:ftr', CT_HeaderFooter)

@@ -24,6 +24,11 @@ class _BaseHeaderFooter(ElementProxy):
         self._sectPr = element
         self._type = type
 
+
+class Header(_BaseHeaderFooter):
+    """
+    One of the page headers for a section.
+    """
     @lazyproperty
     def body(self):
         """
@@ -46,10 +51,30 @@ class _BaseHeaderFooter(ElementProxy):
         return False
 
 
-class Header(_BaseHeaderFooter):
+class Footer(_BaseHeaderFooter):
     """
     One of the page headers for a section.
     """
+    @lazyproperty
+    def body(self):
+        """
+        BlockItemContainer instance with contents of Header
+        """
+        footerReference = self._sectPr.get_footerReference_of_type(self._type)
+        if footerReference is None:
+            return None
+        return self.part.related_hdrftr_body(footerReference.rId)
+
+    @property
+    def is_linked_to_previous(self):
+        """
+        Boolean representing whether this Header is inherited from
+        a previous section.
+        """
+        ref = self._sectPr.get_footerReference_of_type(self._type)
+        if ref is None:
+            return True
+        return False
 
 
 class HeaderFooterBody(BlockItemContainer):

@@ -1,4 +1,7 @@
+.cache
+.DS_Store
 .coverage
+.idea
 /dist/
 /docs/.build/
 /*.egg-info

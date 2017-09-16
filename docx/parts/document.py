@@ -126,15 +126,7 @@ class DocumentPart(XmlPart):
         Return the |HeaderFooterBody| object corresponding to the related
         part identified by *rId*.
         """
-        part = self.get_related_part(rId)
-        return part.body
-
-    def get_related_part(self, rId):
-        """ HACK this isn't strictly necessary
-        just adding it because it seems much easier to mock than
-        self.rels.related_parts
-        """
-        return self.rels.related_parts[rId]
+        return self.related_parts[rId].body
 
     def save(self, path_or_stream):
         """

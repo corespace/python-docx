@@ -12,7 +12,7 @@ from docx.opc.part import PartFactory
 from docx.opc.parts.coreprops import CorePropertiesPart
 
 from docx.parts.document import DocumentPart
-from docx.parts.header import HeaderPart
+from docx.parts.header import HeaderPart, FooterPart
 from docx.parts.image import ImagePart
 from docx.parts.numbering import NumberingPart
 from docx.parts.settings import SettingsPart
@@ -32,6 +32,7 @@ PartFactory.part_type_for[CT.WML_NUMBERING] = NumberingPart
 PartFactory.part_type_for[CT.WML_SETTINGS] = SettingsPart
 PartFactory.part_type_for[CT.WML_STYLES] = StylesPart
 PartFactory.part_type_for[CT.WML_HEADER] = HeaderPart
+PartFactory.part_type_for[CT.WML_FOOTER] = FooterPart
 
 del (
     CT, CorePropertiesPart, DocumentPart, NumberingPart, PartFactory,
