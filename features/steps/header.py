@@ -11,7 +11,7 @@ from __future__ import (
 from behave import given, then, when
 
 from docx import Document
-
+from docx.enum.header import WD_HEADER_FOOTER
 from helpers import test_docx, saved_docx_path, test_text
 
 
@@ -25,8 +25,8 @@ def given_a_header_having_or_no_definition(context, having_or_no):
     }[having_or_no]
     document = Document(test_docx(filename))
     context.document = document
-    context.header = document.sections[0].header
-    context.footer = document.sections[0].footer
+    context.header = document.sections[0].header(WD_HEADER_FOOTER.PRIMARY)
+    context.footer = document.sections[0].footer(WD_HEADER_FOOTER.PRIMARY)
 
 
 # when =====================================================
@@ -79,5 +79,5 @@ def then_footer_is_linked_to_previous_is_value(context, value):
 @then('the footer contains the text I added')
 def the_footer_contains_the_text_i_added(context):
     document = Document(saved_docx_path)
-    footer = document.sections[0].footer
+    footer = document.sections[0].footer(WD_HEADER_FOOTER.PRIMARY)
     assert footer.body.paragraphs[0].text == test_text

@@ -114,7 +114,7 @@ class DescribeSection(object):
 
     def it_provides_access_to_its_header(self, header_fixture):
         section, Header_, sectPr, header_ = header_fixture
-        header = section.header
+        header = section.header(WD_HEADER_FOOTER.PRIMARY)
         Header_.assert_called_once_with(
             sectPr, section, WD_HEADER_FOOTER.PRIMARY
         )

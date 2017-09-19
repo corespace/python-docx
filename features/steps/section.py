@@ -13,6 +13,7 @@ from docx.enum.section import WD_ORIENT, WD_SECTION
 from docx.header import Header
 from docx.section import Section
 from docx.shared import Inches
+from docx.enum.header import WD_HEADER_FOOTER
 
 from helpers import test_docx
 
@@ -147,7 +148,7 @@ def then_len_sections_is_3(context):
 @then('section.header is a Header object')
 def then_section_header_is_a_Header_object(context):
     section = context.section
-    assert isinstance(section.header, Header)
+    assert isinstance(section.header(WD_HEADER_FOOTER.PRIMARY), Header)
 
 
 @then('the reported {margin_side} margin is {inches} inches')
