@@ -60,6 +60,7 @@ class Headers(Sequence):
     Sequence of |Footer| objects corresponding to the footers in the
     document. Supports ``len()``, iteration, and indexed access.
     """
+    enum_list = [WD_HEADER_FOOTER.PRIMARY, WD_HEADER_FOOTER.FIRST_PAGE, WD_HEADER_FOOTER.EVEN_PAGES]
 
     def __init__(self, sectPr, parent):
         super(Headers, self).__init__()
@@ -70,12 +71,12 @@ class Headers(Sequence):
         return Header(self._sectPr, self._parent, self._sectPr.get_headerReference_of_type(key))
 
     def __iter__(self):
-        for _type in WD_HEADER_FOOTER.__members__:
+        for _type in Headers.enum_list:
             footer_ref = self._sectPr.get_headerReference_of_type(_type)
             yield Header(self._sectPr, self._parent, footer_ref)
 
     def __len__(self):
-        return len(WD_HEADER_FOOTER.__members__)
+        return len(Headers.enum_list)
 
 
 class Footers(Sequence):
@@ -83,6 +84,7 @@ class Footers(Sequence):
     Sequence of |Footer| objects corresponding to the footers in the
     document. Supports ``len()``, iteration, and indexed access.
     """
+    enum_list = [WD_HEADER_FOOTER.PRIMARY, WD_HEADER_FOOTER.FIRST_PAGE, WD_HEADER_FOOTER.EVEN_PAGES]
 
     def __init__(self, sectPr, parent):
         super(Footers, self).__init__()
@@ -93,12 +95,12 @@ class Footers(Sequence):
         return Footer(self._sectPr, self._parent, self._sectPr.get_footerReference_of_type(key))
 
     def __iter__(self):
-        for _type in WD_HEADER_FOOTER.__members__:
+        for _type in Footers.enum_list:
             footer_ref = self._sectPr.get_footerReference_of_type(_type)
             yield Footer(self._sectPr, self._parent, footer_ref)
 
     def __len__(self):
-        return len(WD_HEADER_FOOTER.__members__)
+        return len(Footers.enum_list)
 
 
 class HeaderFooterBody(BlockItemContainer):
