@@ -8,6 +8,8 @@ from __future__ import (
     absolute_import, division, print_function, unicode_literals
 )
 
+from collections import Sequence
+from .enum.header import WD_HEADER_FOOTER
 from .blkcntnr import BlockItemContainer
 from .shared import ElementProxy, lazyproperty
 
@@ -17,64 +19,86 @@ class _BaseHeaderFooter(ElementProxy):
     Base class for header and footer objects.
     """
 
-    __slots__ = ('_sectPr', '_type')
+    __slots__ = '_hdr_ftr_ref'
 
-    def __init__(self, element, parent, type):
+    def __init__(self, element, parent, hdr_ftr_ref):
         super(_BaseHeaderFooter, self).__init__(element, parent)
-        self._sectPr = element
-        self._type = type
+        self._hdr_ftr_ref = hdr_ftr_ref
+
+    @lazyproperty
+    def body(self):
+        """
+        BlockItemContainer instance with contents of Header
+        """
+        if self._hdr_ftr_ref is None:
+            return None
+        return self.part.related_hdrftr_body(self._hdr_ftr_ref.rId)
+
+    @property
+    def is_linked_to_previous(self):
+        """
+        Boolean representing whether this Header is inherited from
+        a previous section.
+        """
+        return self._hdr_ftr_ref is None
 
 
 class Header(_BaseHeaderFooter):
     """
     One of the page headers for a section.
     """
-    @lazyproperty
-    def body(self):
-        """
-        BlockItemContainer instance with contents of Header
-        """
-        headerReference = self._sectPr.get_headerReference_of_type(self._type)
-        if headerReference is None:
-            return None
-        return self.part.related_hdrftr_body(headerReference.rId)
-
-    @property
-    def is_linked_to_previous(self):
-        """
-        Boolean representing whether this Header is inherited from
-        a previous section.
-        """
-        ref = self._sectPr.get_headerReference_of_type(self._type)
-        if ref is None:
-            return True
-        return False
 
 
 class Footer(_BaseHeaderFooter):
     """
-    One of the page headers for a section.
+    One of the page footers for a section.
     """
-    @lazyproperty
-    def body(self):
-        """
-        BlockItemContainer instance with contents of Header
-        """
-        footerReference = self._sectPr.get_footerReference_of_type(self._type)
-        if footerReference is None:
-            return None
-        return self.part.related_hdrftr_body(footerReference.rId)
 
-    @property
-    def is_linked_to_previous(self):
-        """
-        Boolean representing whether this Header is inherited from
-        a previous section.
-        """
-        ref = self._sectPr.get_footerReference_of_type(self._type)
-        if ref is None:
-            return True
-        return False
+
+class Headers(Sequence):
+    """
+    Sequence of |Footer| objects corresponding to the footers in the
+    document. Supports ``len()``, iteration, and indexed access.
+    """
+
+    def __init__(self, sectPr, parent):
+        super(Headers, self).__init__()
+        self._sectPr = sectPr
+        self._parent = parent
+
+    def __getitem__(self, key):
+        return Header(self._sectPr, self._parent, self._sectPr.get_headerReference_of_type(key))
+
+    def __iter__(self):
+        for _type in WD_HEADER_FOOTER:
+            footer_ref = self._sectPr.get_headerReference_of_type(_type)
+            yield Header(self._sectPr, self._parent, footer_ref)
+
+    def __len__(self):
+        return len(WD_HEADER_FOOTER)
+
+
+class Footers(Sequence):
+    """
+    Sequence of |Footer| objects corresponding to the footers in the
+    document. Supports ``len()``, iteration, and indexed access.
+    """
+
+    def __init__(self, sectPr, parent):
+        super(Footers, self).__init__()
+        self._sectPr = sectPr
+        self._parent = parent
+
+    def __getitem__(self, key):
+        return Footer(self._sectPr, self._parent, self._sectPr.get_footerReference_of_type(key))
+
+    def __iter__(self):
+        for _type in WD_HEADER_FOOTER:
+            footer_ref = self._sectPr.get_footerReference_of_type(_type)
+            yield Footer(self._sectPr, self._parent, footer_ref)
+
+    def __len__(self):
+        return len(WD_HEADER_FOOTER)
 
 
 class HeaderFooterBody(BlockItemContainer):

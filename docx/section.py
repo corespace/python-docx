@@ -8,8 +8,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from collections import Sequence
 
-from .header import Header, Footer
-from .shared import ElementProxy
+from .header import Headers, Footers
+from .shared import ElementProxy, lazyproperty
 
 
 class Sections(Sequence):
@@ -84,23 +84,25 @@ class Section(ElementProxy):
     def gutter(self, value):
         self._sectPr.gutter = value
 
-    def header(self, _type):
+    @lazyproperty
+    def headers(self):
         """
-        Return the |Header| object representing the default header for this
-        section. A |Header| object is always returned, whether such a header
+        Return the |Headers| object representing the headers for this
+        section. A |Headers| object is always returned, whether such a header
         is present or not. The header itself is added, updated, or removed
-        using the returned object. Type is one of docx.enum.header.WD_HEADER_FOOTER
+        using the returned object.
         """
-        return Header(self._sectPr, self, _type)
+        return Headers(self._sectPr, self)
 
-    def footer(self, _type):
+    @lazyproperty
+    def footers(self):
         """
-        Return the |Footer| object representing the default footer for this
-        section. A |Footer| object is always returned, whether such a footer
+        Return the |Footers| object representing the footers for this
+        section. A |Footers| object is always returned, whether such a footer
         is present or not. The footer itself is added, updated, or removed
-        using the returned object. Type is one of docx.enum.header.WD_HEADER_FOOTER
+        using the returned object.
         """
-        return Footer(self._sectPr, self, _type)
+        return Footers(self._sectPr, self)
 
     @property
     def header_distance(self):

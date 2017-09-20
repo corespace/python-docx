@@ -148,7 +148,7 @@ def then_len_sections_is_3(context):
 @then('section.header is a Header object')
 def then_section_header_is_a_Header_object(context):
     section = context.section
-    assert isinstance(section.header(WD_HEADER_FOOTER.PRIMARY), Header)
+    assert isinstance(section.headers[WD_HEADER_FOOTER.PRIMARY], Header)
 
 
 @then('the reported {margin_side} margin is {inches} inches')
