@@ -70,12 +70,12 @@ class Headers(Sequence):
         return Header(self._sectPr, self._parent, self._sectPr.get_headerReference_of_type(key))
 
     def __iter__(self):
-        for _type in WD_HEADER_FOOTER:
+        for _type in WD_HEADER_FOOTER.__members__:
             footer_ref = self._sectPr.get_headerReference_of_type(_type)
             yield Header(self._sectPr, self._parent, footer_ref)
 
     def __len__(self):
-        return len(WD_HEADER_FOOTER)
+        return len(WD_HEADER_FOOTER.__members__)
 
 
 class Footers(Sequence):
@@ -93,12 +93,12 @@ class Footers(Sequence):
         return Footer(self._sectPr, self._parent, self._sectPr.get_footerReference_of_type(key))
 
     def __iter__(self):
-        for _type in WD_HEADER_FOOTER:
+        for _type in WD_HEADER_FOOTER.__members__:
             footer_ref = self._sectPr.get_footerReference_of_type(_type)
             yield Footer(self._sectPr, self._parent, footer_ref)
 
     def __len__(self):
-        return len(WD_HEADER_FOOTER)
+        return len(WD_HEADER_FOOTER.__members__)
 
 
 class HeaderFooterBody(BlockItemContainer):

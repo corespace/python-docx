@@ -10,8 +10,9 @@ from __future__ import (
 
 import pytest
 
+from docx.oxml.section import CT_SectPr
 from docx.enum.header import WD_HEADER_FOOTER
-from docx.header import _BaseHeaderFooter, Header, HeaderFooterBody
+from docx.header import _BaseHeaderFooter, Header, HeaderFooterBody, Footers, Footer
 from docx.parts.document import DocumentPart
 from docx.parts.header import HeaderPart
 
@@ -37,7 +38,16 @@ class Describe_BaseHeaderFooter(object):
         body = document_part.related_hdrftr_body(rId)
         assert body == header_part_.body
 
+    def it_can_be_enumerated(self, footers_fixture):
+        assert len(WD_HEADER_FOOTER.__members__) == len(footers_fixture)
+        for footer in footers_fixture:
+            assert isinstance(footer, Footer)
+
     # fixtures -------------------------------------------------------
+
+    @pytest.fixture
+    def footers_fixture(self, sect_pr_):
+        return Footers(sect_pr_, None)
 
     @pytest.fixture
     def hdrftr_fixture(self, header_part_, body_, related_parts_prop_):
@@ -58,7 +68,11 @@ class Describe_BaseHeaderFooter(object):
     ])
     def body_fixture(self, request, body_, part_prop_, document_part_):
         sectPr_cxml, rId = request.param
-        header = Header(element(sectPr_cxml), None, WD_HEADER_FOOTER.PRIMARY)
+        sectPr = element(sectPr_cxml)
+        if sectPr:
+            header = Header(sectPr, None, sectPr.get_headerReference_of_type(WD_HEADER_FOOTER.PRIMARY))
+        else:
+            header = Header(sectPr, None, None)
         calls, expected_value = ([call(rId)], body_) if rId else ([], None)
         document_part_.related_hdrftr_body.return_value = body_
         return header, calls, expected_value
@@ -70,10 +84,18 @@ class Describe_BaseHeaderFooter(object):
     ])
     def is_linked_fixture(self, request):
         sectPr_cxml, expected_value = request.param
-        header = Header(element(sectPr_cxml), None, WD_HEADER_FOOTER.PRIMARY)
+        sectPr = element(sectPr_cxml)
+        if sectPr:
+            header = Header(sectPr, None, sectPr.get_headerReference_of_type(WD_HEADER_FOOTER.PRIMARY))
+        else:
+            header = Header(sectPr, None, None)
         return header, expected_value
 
     # fixture components ---------------------------------------------
+
+    @pytest.fixture
+    def sect_pr_(self, request):
+        return instance_mock(request, CT_SectPr)
 
     @pytest.fixture
     def body_(self, request):
